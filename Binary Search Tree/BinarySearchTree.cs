@@ -13,15 +13,15 @@ namespace Binary_Search_Tree
         {
             if (Count == 0)
             {
-                Node<T> temp = new Node<T>(data);               
+                var temp = new Node<T>(data);               
                 root = temp;
                 Count++;
                 return;
             }
             else
             {
-                Node<T> temp = new Node<T>(data);
-                Node<T> current = root;
+                var temp = new Node<T>(data);
+                var current = root;
                 while (true)
                 {
                     if (temp.data.CompareTo(current.data) == 1)
@@ -56,27 +56,115 @@ namespace Binary_Search_Tree
             }
         }
 
-        public void Search(T data)
+        public Node<T> Search(T data)
         {
-            Node<T> current = root;
-            while(true)
+            var current = root;
+            while (current != null)
             {
-                if (current.data.CompareTo(data) == 0)
+                int comp = data.CompareTo(current.data);
+
+                if (comp == 0)
                 {
-                    Console.WriteLine($"{data} is in the tree.");
-                    return;
+                    break;
+                }
+                else if (comp < 0)
+                {
+                    current = current.left;
                 }
                 else
                 {
-                    if (current.data.CompareTo(data) == 1)
-                    {
-                        current = current.left;
-                    }
-                    else
-                    {
-                        current = current.right;
-                    }
+                    current = current.right;
                 }
+            }
+            return null;
+        }
+
+        public bool IsRightChild(T data)
+        {
+            var current = Search(data);
+            if (current.parent.right == current)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsLeftChild(T data)
+        {
+            var current = Search(data);
+            if (current.parent.left == current)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void Delete(T data)
+        {
+            var current = Search(data);
+            //errors
+            if (Count == 0)
+            {
+                throw new Exception("The tree is empty.");
+            }
+            else if (current == null)
+            {
+                throw new Exception("The tree does not contain the given input.");
+            }
+            //if current is root
+            else if (current == root)
+            {
+                root = null;
+            }
+            //if current has no children
+            else if (current.left == null && current.right == null)
+            {
+                if (IsRightChild(current.data))
+                {
+                    current.parent.right = null;
+                }
+                else
+                {
+                    current.parent.left = null;
+                }
+            }
+            //if current has one child
+            else if (current.left == null && current.right != null)
+            {
+                if (IsRightChild(current.data))
+                {
+                    current.parent.right = current.right;
+                    current.parent.right.right = null;
+                }
+                else
+                {
+                    current.parent.left = current.right;
+                    current.parent.left.right = null;
+                }
+            }
+            else if (current.left != null && current.right == null)
+            {
+                if (IsLeftChild(current.data))
+                {
+                    current.parent.left = current.left;
+                    current.parent.left.left = null;
+                }
+                else
+                {
+                    current.parent.right = current.left;
+                    current.parent.right.left = null;
+                }
+            }
+            //if current has 2 children
+            else
+            {
+                var temp = current.left;
+                while (temp.right != null)
+                {
+                    temp = temp.right;
+                }
+                current.parent.left = temp;
+                current.parent.left.right = null;
             }
         }
     }

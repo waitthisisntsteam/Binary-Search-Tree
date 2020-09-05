@@ -14,7 +14,6 @@ namespace Binary_Search_Tree
         public Node(T data)
         {
             this.data = data;
-
         }
     }
 }
