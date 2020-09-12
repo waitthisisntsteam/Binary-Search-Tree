@@ -29,6 +29,8 @@ namespace Binary_Search_Tree
                         if (current.right == null)
                         {
                             current.right = temp;
+                            current.right.parent = current;
+                            Count++;
                             return;
                         }
                         else
@@ -41,6 +43,8 @@ namespace Binary_Search_Tree
                         if (current.left == null)
                         {
                             current.left = temp;
+                            current.left.parent = current;
+                            Count++;
                             break;
                         }
                         else
@@ -62,10 +66,9 @@ namespace Binary_Search_Tree
             while (current != null)
             {
                 int comp = data.CompareTo(current.data);
-
                 if (comp == 0)
                 {
-                    break;
+                    return current;
                 }
                 else if (comp < 0)
                 {
@@ -82,6 +85,10 @@ namespace Binary_Search_Tree
         public bool IsRightChild(T data)
         {
             var current = Search(data);
+            if (current.parent == null)
+            {
+                return false;
+            }
             if (current.parent.right == current)
             {
                 return true;
@@ -92,6 +99,10 @@ namespace Binary_Search_Tree
         public bool IsLeftChild(T data)
         {
             var current = Search(data);
+            if (current.parent == null)
+            {
+                return false;
+            }
             if (current.parent.left == current)
             {
                 return true;
@@ -115,6 +126,7 @@ namespace Binary_Search_Tree
             else if (current == root)
             {
                 root = null;
+                Count = 0;
             }
             //if current has no children
             else if (current.left == null && current.right == null)
@@ -127,7 +139,7 @@ namespace Binary_Search_Tree
                 {
                     current.parent.left = null;
                 }
-            }
+            }            
             //if current has one child
             else if (current.left == null && current.right != null)
             {
@@ -156,7 +168,7 @@ namespace Binary_Search_Tree
                 }
             }
             //if current has 2 children
-            else
+            else if (current.left != null && current.right != null)
             {
                 var temp = current.left;
                 while (temp.right != null)
@@ -166,6 +178,7 @@ namespace Binary_Search_Tree
                 current.parent.left = temp;
                 current.parent.left.right = null;
             }
+            
         }
     }
 }
