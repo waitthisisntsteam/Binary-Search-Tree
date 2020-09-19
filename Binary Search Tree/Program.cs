@@ -7,12 +7,13 @@ namespace Binary_Search_Tree
         static void Main(string[] args)
         {
             var BST = new BinarySearchTree<int>();
+
             string answer = "";
             int input = 0;
-            
+
             while (true)
             {
-                Console.WriteLine("Would you like to insert, delete, search, or exit?");
+                Console.WriteLine("Would you like to insert, delete, search, print, or exit?");
                 answer = Console.ReadLine();
                 if (answer.ToLower() == "insert")
                 {
@@ -31,13 +32,18 @@ namespace Binary_Search_Tree
                     Console.WriteLine("What would you like to search for?");
                     input = int.Parse(Console.ReadLine());
                     if (BST.Search(input) != null)
-                    { 
+                    {
                         Console.WriteLine($"{BST.Search(input).data} was found.");
                     }
                     else
                     {
                         Console.WriteLine($"{input} was not found.");
                     }
+                }
+                else if (answer.ToLower() == "print")
+                {
+                    Console.Clear();
+                    BST.PrintTree();
                 }
                 else if (answer.ToLower() == "exit")
                 {

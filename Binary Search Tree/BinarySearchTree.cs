@@ -1,19 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Binary_Search_Tree
 {
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     class BinarySearchTree<T> where T : IComparable<T>
     {
         public Node<T> root;
         int Count = 0;
 
+        public void PrintTree()
+        {
+            PrintTreeRecursive(root, Console.WindowWidth / 2, 0, 18);
+        }
+
+        private void PrintTreeRecursive(Node<T> node, int x, int y, int dx)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            Console.SetCursorPosition(x, y);
+            Console.WriteLine(node.data);
+            PrintTreeRecursive(node.left, x - dx, y + 1, dx - 6);
+            PrintTreeRecursive(node.right, x + dx, y + 1, dx - 6);
+
+        }
+
         public void Insert(T data)
         {
             if (Count == 0)
             {
-                var temp = new Node<T>(data);               
+                var temp = new Node<T>(data);
                 root = temp;
                 Count++;
                 return;
@@ -139,7 +160,7 @@ namespace Binary_Search_Tree
                 {
                     current.parent.left = null;
                 }
-            }            
+            }
             //if current has one child
             else if (current.left == null && current.right != null)
             {
@@ -170,15 +191,21 @@ namespace Binary_Search_Tree
             //if current has 2 children
             else if (current.left != null && current.right != null)
             {
-                var temp = current.left;
+
+                var temp = current.right;
                 while (temp.right != null)
                 {
                     temp = temp.right;
                 }
-                current.parent.left = temp;
-                current.parent.left.right = null;
+                current.parent.right = temp;
+                current.parent.right.right = null;
             }
-            
+            Count--;
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return $"Root: {root?.data.ToString() ?? "null"}, Count: {Count}";
         }
     }
 }
