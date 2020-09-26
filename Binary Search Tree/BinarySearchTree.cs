@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace Binary_Search_Tree
@@ -103,6 +104,17 @@ namespace Binary_Search_Tree
             return null;
         }
 
+        public bool IsRightChild(Node<T> node)
+        {
+            if (node.parent == null)
+            {
+                return false;
+            }
+
+            return (node.parent.right == node);
+           
+        }
+
         public bool IsRightChild(T data)
         {
             var current = Search(data);
@@ -131,76 +143,83 @@ namespace Binary_Search_Tree
             return false;
         }
 
-        public void Delete(T data)
+        public bool Delete(T data)
         {
             var current = Search(data);
-            //errors
             if (Count == 0)
             {
-                throw new Exception("The tree is empty.");
+                return false;
             }
             else if (current == null)
             {
-                throw new Exception("The tree does not contain the given input.");
-            }
-            //if current is root
-            else if (current == root)
-            {
-                root = null;
-                Count = 0;
-            }
-            //if current has no children
-            else if (current.left == null && current.right == null)
-            {
-                if (IsRightChild(current.data))
-                {
-                    current.parent.right = null;
-                }
-                else
-                {
-                    current.parent.left = null;
-                }
-            }
-            //if current has one child
-            else if (current.left == null && current.right != null)
-            {
-                if (IsRightChild(current.data))
-                {
-                    current.parent.right = current.right;
-                    current.parent.right.right = null;
-                }
-                else
-                {
-                    current.parent.left = current.right;
-                    current.parent.left.right = null;
-                }
-            }
-            else if (current.left != null && current.right == null)
-            {
-                if (IsLeftChild(current.data))
-                {
-                    current.parent.left = current.left;
-                    current.parent.left.left = null;
-                }
-                else
-                {
-                    current.parent.right = current.left;
-                    current.parent.right.left = null;
-                }
+                return false;
             }
             //if current has 2 children
-            else if (current.left != null && current.right != null)
+            if (current.ChildCount == 2)
             {
-
-                var temp = current.right;
-                while (temp.right != null)
-                {
-                    temp = temp.right;
-                }
-                current.parent.right = temp;
-                current.parent.right.right = null;
+                Count--;
+                var candidateNode = GetMinimum(current.right);
+                current.data = candidateNode.data;
+                current = candidateNode;
+                return true;
             }
-            Count--;
+            //if current has no children
+            if (current.ChildCount == 0)
+            {
+                Count--;
+                if (current == root)
+                {
+                    root = null;
+                    Count = 0;
+                    return true;
+                }
+                if (IsRightChild(current))
+                {
+                    current.parent.right = null;
+                    return true;
+                }
+                current.parent.left = null;
+                return true;
+            }
+            //if current has one child
+            else if (current.ChildCount == 1)
+            {
+                Node<T> child = current.left;
+
+                if (child == null)
+                {
+                    child = current.right;
+                }
+                if (current == root)
+                {
+                    root = child;
+                }
+                else if (IsRightChild(current))
+                {
+                    current.parent.right = child;
+                }
+                else
+                {
+                    current.parent.left = current.left;
+                }
+
+                child.parent = current.parent;
+                Count--;
+                return true;
+            }
+
+            return false;
+                      
+        }
+
+        private Node<T> GetMinimum(Node<T> node)
+        {
+            while (node.left != null)
+            {
+                node = node.left;
+            }
+
+            return node;
         }
 
         private string GetDebuggerDisplay()

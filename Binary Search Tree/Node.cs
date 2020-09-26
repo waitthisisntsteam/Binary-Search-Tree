@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Transactions;
 
 namespace Binary_Search_Tree
 {
@@ -23,6 +24,15 @@ namespace Binary_Search_Tree
             get
             {
                 int count = 0;
+                if (left != null)
+                {
+                    count++;
+                }
+                if (right != null)
+                {
+                    count++;
+                }
+                return count;
             }
         }
 

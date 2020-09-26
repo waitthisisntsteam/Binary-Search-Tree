@@ -13,6 +13,7 @@ namespace Binary_Search_Tree
 
             while (true)
             {
+                Console.WriteLine();
                 Console.WriteLine("Would you like to insert, delete, search, print, or exit?");
                 answer = Console.ReadLine();
                 if (answer.ToLower() == "insert")
