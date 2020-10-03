@@ -7,7 +7,6 @@ namespace Binary_Search_Tree
         static void Main(string[] args)
         {
             var BST = new BinarySearchTree<int>();
-
             string answer = "";
             int input = 0;
 

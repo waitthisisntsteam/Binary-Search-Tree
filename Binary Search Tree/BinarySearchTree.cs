@@ -161,7 +161,6 @@ namespace Binary_Search_Tree
                 var candidateNode = GetMinimum(current.right);
                 current.data = candidateNode.data;
                 current = candidateNode;
-                return true;
             }
             //if current has no children
             if (current.ChildCount == 0)
