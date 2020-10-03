@@ -7,7 +7,7 @@ using System.Transactions;
 namespace Binary_Search_Tree
 {
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-    class Node<T>
+    public class Node<T>
     {
         public Node<T> parent;
         public Node<T> left;

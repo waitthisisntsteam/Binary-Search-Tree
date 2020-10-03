@@ -7,6 +7,20 @@ namespace Binary_Search_Tree
         static void Main(string[] args)
         {
             var BST = new BinarySearchTree<int>();
+
+            BST.Insert(50);
+            BST.Insert(20);
+            BST.Insert(100);
+            BST.Insert(5);
+            BST.Insert(25);
+            BST.Insert(0);
+            BST.Insert(80);
+
+            foreach (var item in BST)
+            {
+                Console.WriteLine(item);
+            }
+
             string answer = "";
             int input = 0;
 

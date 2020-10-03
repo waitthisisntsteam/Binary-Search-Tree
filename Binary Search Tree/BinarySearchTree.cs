@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Binary_Search_Tree
 {
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-    class BinarySearchTree<T> where T : IComparable<T>
+    public class BinarySearchTree<T> : IEnumerable<T>
+        where T : IComparable<T>
     {
         public Node<T> root;
-        int Count = 0;
+        public int Count { get; private set; }
 
         public void PrintTree()
         {
@@ -112,7 +115,7 @@ namespace Binary_Search_Tree
             }
 
             return (node.parent.right == node);
-           
+
         }
 
         public bool IsRightChild(T data)
@@ -208,7 +211,7 @@ namespace Binary_Search_Tree
             }
 
             return false;
-                      
+
         }
 
         private Node<T> GetMinimum(Node<T> node)
@@ -224,6 +227,48 @@ namespace Binary_Search_Tree
         private string GetDebuggerDisplay()
         {
             return $"Root: {root?.data.ToString() ?? "null"}, Count: {Count}";
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            List<T> preOrderValues = PreOrderTraversal();
+
+            foreach (var item in preOrderValues)
+            {
+                yield return item;
+            }
+        }
+
+        private List<T> PreOrderTraversal()
+        {
+            List<T> nodes = new List<T>();
+            Stack<Node<T>> stack = new Stack<Node<T>>();
+            stack.Push(root);
+
+            while (stack.Count > 0)
+            {
+                var node = stack.Pop();
+                nodes.Add(node.data);
+                if (node.right != null)
+                {
+                    stack.Push(node.right);
+                }
+                if (node.left != null)
+                {
+                    stack.Push(node.left);
+                }
+            }
+            return nodes;
+        }
+
+        private List<T> InOrderTraversal()
+        {
+
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
