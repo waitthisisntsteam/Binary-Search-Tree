@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http.Headers;
+using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -231,9 +233,11 @@ namespace Binary_Search_Tree
 
         public IEnumerator<T> GetEnumerator()
         {
-            List<T> preOrderValues = PreOrderTraversal();
+            //List<T> preOrderValues = PreOrderTraversal();
+            //List<T> inOrderValues = InOrderTraversal();
+            List<T> postOrderValues = PostOrderTraversal();
 
-            foreach (var item in preOrderValues)
+            foreach (var item in postOrderValues)
             {
                 yield return item;
             }
@@ -261,9 +265,57 @@ namespace Binary_Search_Tree
             return nodes;
         }
 
-        private List<T> InOrderTraversal()
+        public List<T> InOrderTraversal()
         {
+            List<T> nodes = new List<T>();
+            Stack<Node<T>> stack = new Stack<Node<T>>();
+            var node = root;
+            while (stack.Count > 0 || node != null)
+            {
+                if (node != null)
+                {
+                    stack.Push(node);
+                    node = node.left;
+                }
+                else
+                {
+                    node = stack.Pop();
+                    nodes.Add(node.data);
+                    node = node.right;
+                }
+            }
+            return nodes;
+        }
 
+        public List<T> PostOrderTraversal()
+        {
+            List<T> nodes = new List<T>();
+            Stack<Node<T>> stack = new Stack<Node<T>>();
+
+            var node = root;
+            var previous = root;
+            while (stack.Count > 0 || node != null)
+            {
+                if (node != null)
+                {
+                    stack.Push(node);
+                    node = node.left;
+                }
+                else
+                {
+                    var temp = stack.Peek();
+                    if (temp.right != null && previous != temp.right)
+                    {
+                        node = temp.right;
+                    }
+                    else
+                    {
+                        nodes.Add(temp.data);
+                        previous = stack.Pop();
+                    }
+                }
+            }
+            return nodes;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
