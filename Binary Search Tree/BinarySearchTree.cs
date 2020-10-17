@@ -5,8 +5,10 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Binary_Search_Tree
 {
@@ -233,17 +235,18 @@ namespace Binary_Search_Tree
 
         public IEnumerator<T> GetEnumerator()
         {
-            //List<T> preOrderValues = PreOrderTraversal();
+            List<T> preOrderValues = PreOrderTraversal();
             //List<T> inOrderValues = InOrderTraversal();
-            List<T> postOrderValues = PostOrderTraversal();
+            //List<T> postOrderValues = PostOrderTraversal();
+            //List<T> BreadthFirstValues = BreadthFirstTraversal();
 
-            foreach (var item in postOrderValues)
+            foreach (var item in preOrderValues)
             {
                 yield return item;
             }
         }
 
-        private List<T> PreOrderTraversal()
+        /*public List<T> PreOrderTraversal()
         {
             List<T> nodes = new List<T>();
             Stack<Node<T>> stack = new Stack<Node<T>>();
@@ -263,6 +266,27 @@ namespace Binary_Search_Tree
                 }
             }
             return nodes;
+        }*/
+
+        public List<T> PreOrderTraversal()
+        {
+            List<T> nodes = new List<T>();
+
+            PreOrderTraversalRec(root, nodes);
+
+            return nodes;
+           
+        }
+
+        private void PreOrderTraversalRec(Node<T> root, List<T> nodes)
+        {
+            if (root == null)
+            {
+                return;
+            }
+            PreOrderTraversalRec(root.left, nodes);
+            PreOrderTraversalRec(root.right, nodes);
+            nodes.Add(root.data);
         }
 
         public List<T> InOrderTraversal()
@@ -313,6 +337,28 @@ namespace Binary_Search_Tree
                         nodes.Add(temp.data);
                         previous = stack.Pop();
                     }
+                }
+            }
+            return nodes;
+        }
+
+        public List<T> BreadthFirstTraversal()
+        {
+            List<T> nodes = new List<T>();
+            Queue<Node<T>> queue = new Queue<Node<T>>();
+            var node = root;
+            queue.Enqueue(node);
+            while (queue.Count > 0)
+            {
+                node = queue.Dequeue();
+                nodes.Add(node.data);
+                if (node.left != null)
+                {
+                    queue.Enqueue(node.left);
+                }
+                if (node.right != null)
+                {
+                    queue.Enqueue(node.right);
                 }
             }
             return nodes;
